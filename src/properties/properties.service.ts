@@ -41,7 +41,9 @@ export class PropertiesService {
   private async removeFile(url: string) {
     try {
       await unlink(join(process.cwd(), url));
-    } catch {}
+    } catch (error) {
+      console.log('Fayl o‘chirilmadi:', join(process.cwd(), url), error);
+    }
   }
 
   async getProperties(query: QueryPropertyDTO) {
