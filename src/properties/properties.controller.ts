@@ -21,6 +21,7 @@ import { QueryPropertyDTO } from './dto/query-property.dto.js';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
+import { OptionalJwtGuard } from '../auth/jwt-auth/optional-jwt.guard.js';
 
 @Controller('properties')
 export class PropertiesController {
@@ -42,9 +43,10 @@ export class PropertiesController {
     return this.propertiesService.getMyProperties(req.user.id);
   }
 
+  @UseGuards(OptionalJwtGuard)
   @Get(':id')
-  getPropertyById(@Param('id') id: number) {
-    return this.propertiesService.getPropertyById(id);
+  getPropertyById(@Param('id') id: number, @Req() req: any) {
+    return this.propertiesService.getPropertyById(id, req.user);
   }
 
   @UseGuards(JwtAuthGuard)

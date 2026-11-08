@@ -117,7 +117,7 @@ export class PropertiesService {
     };
   }
 
-  async getPropertyById(id: number) {
+  async getPropertyById(id: number, user?: { id: number; role: string }) {
     const property = await this.prisma.property.findUnique({
       where: { id },
       include: {
@@ -129,7 +129,14 @@ export class PropertiesService {
       },
     });
 
-    if (!property || property.status !== 'APPROVED') {
+    if (!property) {
+      throw new NotFoundException("E'lon topilmadi");
+    }
+
+    const isOwner = user?.id === property.ownerId;
+    const isAdmin = user?.role === 'ADMIN';
+
+    if (property.status !== 'APPROVED' && !isOwner && !isAdmin) {
       throw new NotFoundException("E'lon topilmadi");
     }
 
