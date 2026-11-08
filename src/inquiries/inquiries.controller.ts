@@ -21,6 +21,11 @@ export class InquiriesController {
     return this.inquiriesService.getMyInquiries(req.user.id);
   }
 
+  @Get('/inquiries/received')
+  getReceivedInquiries(@Req() req: any) {
+    return this.inquiriesService.getReceivedInquiries(req.user.id);
+  }
+
   @Post('/properties/:propertyId/inquiries')
   createInquiries(
     @Param('propertyId') propertyId: number,

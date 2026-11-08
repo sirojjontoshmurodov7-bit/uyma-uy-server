@@ -39,6 +39,27 @@ export class InquiriesService {
     });
   }
 
+  /** Seller'ning e'lonlariga kelgan murojaatlar (yuboruvchi ma'lumoti bilan). */
+  async getReceivedInquiries(userId: number) {
+    return this.prisma.inquiry.findMany({
+      where: { property: { ownerId: userId } },
+      orderBy: { createdAt: 'desc' },
+      include: {
+        sender: { select: { id: true, fullName: true, email: true } },
+        property: {
+          select: {
+            id: true,
+            title: true,
+            price: true,
+            currency: true,
+            city: true,
+            images: { take: 1, orderBy: { sortOrder: 'asc' } },
+          },
+        },
+      },
+    });
+  }
+
   async getMyInquiries(userId: number) {
     return this.prisma.inquiry.findMany({
       where: { senderId: userId },
