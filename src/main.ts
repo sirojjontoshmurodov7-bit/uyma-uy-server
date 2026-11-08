@@ -6,8 +6,13 @@ import 'dotenv/config';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  const allowedOrigins = (process.env.CORS_ORIGINS ?? 'http://localhost:5173')
+    .split(',')
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+
   app.enableCors({
-    origin: ['http://localhost:5173'],
+    origin: allowedOrigins,
   });
 
   app.useGlobalPipes(
@@ -17,6 +22,7 @@ async function bootstrap() {
       transform: true,
     }),
   );
+
   await app.listen(process.env.PORT ?? 3000);
 }
 await bootstrap();

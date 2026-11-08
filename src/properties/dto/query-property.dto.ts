@@ -1,4 +1,4 @@
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import {
   IsEnum,
   IsIn,
@@ -10,6 +10,9 @@ import {
   Min,
 } from 'class-validator';
 import { ListingType } from '@prisma/client';
+
+const emptyToUndefined = ({ value }: { value: unknown }) =>
+  value === '' ? undefined : value;
 
 export class QueryPropertyDTO {
   @IsOptional()
@@ -25,14 +28,17 @@ export class QueryPropertyDTO {
   @Max(50)
   limit?: number;
 
+  @Transform(emptyToUndefined)
   @IsOptional()
   @IsString()
   city?: string;
 
+  @Transform(emptyToUndefined)
   @IsOptional()
   @IsString()
   category?: string;
 
+  @Transform(emptyToUndefined)
   @IsOptional()
   @IsEnum(ListingType)
   type?: ListingType;
